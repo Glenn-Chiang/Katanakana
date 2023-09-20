@@ -10,6 +10,12 @@ import KatanaIcon from "../../components/KatanaIcon.tsx";
 import { KanaType, GameState } from "./types.ts";
 import { getRandomKana, getKanas } from "./helpers.ts";
 
+function SettingsMenu() {
+  return <>
+    
+  </>
+}
+
 export default function Game() {
   const [kanaType, setKanaType] = useState<KanaType>("katakana");
   const kanas = getKanas(kanaType);
@@ -66,6 +72,9 @@ export default function Game() {
   const handleSkip = () => {};
 
   const handleRestart = () => {};
+
+  if (gameState === 'pre-game') 
+    return <SettingsMenu/>
 
   return (
     <main className="h-screen flex flex-col justify-between">
