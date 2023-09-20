@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import KanaCard from "../../components/KanaCard.tsx";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   faArrowRotateRight,
   faClock,
@@ -9,22 +9,23 @@ import {
 import KatanaIcon from "../../components/KatanaIcon.tsx";
 import { KanaType, GameState } from "./types.ts";
 import { getRandomKana, getKanas } from "./helpers.ts";
+import { useAppDispatch, useAppSelector } from "../../store.ts";
+import { Answer, addAnswer } from "./answersSlice.ts";
 
 function SettingsMenu() {
-  return <>
-    
-  </>
+  return <></>;
 }
 
 export default function Game() {
   const [kanaType, setKanaType] = useState<KanaType>("katakana");
   const kanas = getKanas(kanaType);
   const [kana, setKana] = useState(getRandomKana(kanas));
+  const answers = useAppSelector((state) => state.answers);
 
   const [gameState, setGameState] = useState<GameState>("in-game");
   const gameIsActive = gameState === "in-game";
   const [score, setScore] = useState(0);
-  const [time, setTime] = useState(15);
+  const [time, setTime] = useState(30);
 
   // Start timer once gamestate is in-game
   const timerRef = useRef<undefined | number>(undefined);
@@ -38,13 +39,13 @@ export default function Game() {
 
   // Stop game when timer reaches 0
   useEffect(() => {
-    if (!time) {
-      console.log("time's up");
-      clearInterval(timerRef.current); // Clear timer
-      setInputValue("");
-      setGameState("post-game");
-    }
-  }, [time]);
+    if (time) return;
+    console.log("time's up");
+    clearInterval(timerRef.current); // Clear timer
+    setInputValue("");
+    setGameState("post-game");
+    console.log(answers);
+  }, [time, answers]);
 
   // Handle user input
   const [inputValue, setInputValue] = useState("");
@@ -54,6 +55,8 @@ export default function Game() {
     if (!gameIsActive) return;
     setInputValue(event.target.value);
   };
+
+  const dispatch = useAppDispatch();
 
   // Evaluate accuracy of input when user hits enter
   const handleKeyDown: React.KeyboardEventHandler<HTMLInputElement> = (
@@ -66,15 +69,24 @@ export default function Game() {
       setKana(getRandomKana(kanas));
       setInputValue("");
       setScore((score) => score + 1);
+      const answer: Answer = { kana, correct: true };
+      dispatch(addAnswer(answer));
     }
   };
 
   const handleSkip = () => {};
 
-  const handleRestart = () => {};
+  const handleRestart = () => {
+    setTime(30);
+    setScore(0);
+    setKana(getRandomKana(kanas));
+    setGameState("in-game");
+    inputRef.current?.focus();
+  };
 
-  if (gameState === 'pre-game') 
-    return <SettingsMenu/>
+  const inputRef: React.RefObject<HTMLInputElement> = useRef(null);
+
+  if (gameState === "pre-game") return <SettingsMenu />;
 
   return (
     <main className="h-screen flex flex-col justify-between">
@@ -85,6 +97,7 @@ export default function Game() {
       <section className="flex flex-col gap-4 p-4 items-center justify-center h-1/2">
         <KanaCard kana={kana} />
         <input
+          ref={inputRef}
           value={inputValue}
           onKeyDown={handleKeyDown}
           onChange={handleInputChange}
@@ -117,9 +130,13 @@ function SkipButton({ onClick }: ButtonProps) {
 }
 
 function RestartButton({ onClick }: ButtonProps) {
+  const handleClick: React.MouseEventHandler<HTMLButtonElement> = (event) => {
+    event.currentTarget.blur(); // Unfocus restart button after it is clicked
+    onClick();
+  };
   return (
     <button
-      onClick={onClick}
+      onClick={handleClick}
       className="flex gap-2 items-center hover:text-white"
     >
       <FontAwesomeIcon icon={faRefresh} />
