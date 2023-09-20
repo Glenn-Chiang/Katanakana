@@ -1,10 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { useDispatch, useSelector, TypedUseSelectorHook } from "react-redux";
 import answersReducer from "./features/game/answersSlice";
+import settingsReducer from "./features/game/settingsSlice";
 
 const store = configureStore({
   reducer: {
     answers: answersReducer,
+    settings: settingsReducer
   },
 });
 

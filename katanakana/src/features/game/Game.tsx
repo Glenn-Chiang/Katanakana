@@ -7,25 +7,30 @@ import {
   faRefresh,
 } from "@fortawesome/free-solid-svg-icons";
 import KatanaIcon from "../../components/KatanaIcon.tsx";
-import { KanaType, GameState } from "./types.ts";
+import { GameState } from "./types.ts";
 import { getRandomKana, getKanas } from "./helpers.ts";
 import { useAppDispatch, useAppSelector } from "../../store.ts";
 import { Answer, addAnswer } from "./answersSlice.ts";
+import { useSettingsSelector } from "./settingsSlice.ts";
 
 function SettingsMenu() {
   return <></>;
 }
 
 export default function Game() {
-  const [kanaType, setKanaType] = useState<KanaType>("katakana");
-  const kanas = getKanas(kanaType);
-  const [kana, setKana] = useState(getRandomKana(kanas));
-  const answers = useAppSelector((state) => state.answers);
+  // Get settings from redux store
+  const settings = useSettingsSelector();
+  const { kanaType, timeLimit } = settings;
 
+  const kanas = getKanas(kanaType);
   const [gameState, setGameState] = useState<GameState>("in-game");
   const gameIsActive = gameState === "in-game";
+
+  const [timeLeft, setTimeLeft] = useState<number>(timeLimit);
+  const [kana, setKana] = useState(getRandomKana(kanas));
   const [score, setScore] = useState(0);
-  const [time, setTime] = useState(30);
+  // Record of answers entered by user in current game
+  const answers = useAppSelector((state) => state.answers);
 
   // Start timer once gamestate is in-game
   const timerRef = useRef<undefined | number>(undefined);
@@ -33,19 +38,19 @@ export default function Game() {
     if (gameState !== "in-game") {
       return;
     }
-    timerRef.current = setInterval(() => setTime((time) => time - 1), 1000);
+    timerRef.current = setInterval(() => setTimeLeft((time) => time - 1), 1000);
     return () => clearInterval(timerRef.current);
   }, [gameState]);
 
   // Stop game when timer reaches 0
   useEffect(() => {
-    if (time) return;
+    if (timeLeft) return;
     console.log("time's up");
     clearInterval(timerRef.current); // Clear timer
     setInputValue("");
     setGameState("post-game");
     console.log(answers);
-  }, [time, answers]);
+  }, [timeLeft, answers]);
 
   // Handle user input
   const [inputValue, setInputValue] = useState("");
@@ -77,7 +82,7 @@ export default function Game() {
   const handleSkip = () => {};
 
   const handleRestart = () => {
-    setTime(30);
+    setTimeLeft(30);
     setScore(0);
     setKana(getRandomKana(kanas));
     setGameState("in-game");
@@ -91,7 +96,7 @@ export default function Game() {
   return (
     <main className="h-screen flex flex-col justify-between">
       <div className="p-4 flex justify-between text-4xl">
-        <Clock time={time} />
+        <Clock time={timeLeft} />
         <Score score={score} />
       </div>
       <section className="flex flex-col gap-4 p-4 items-center justify-center h-1/2">
