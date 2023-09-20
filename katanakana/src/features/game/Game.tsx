@@ -1,21 +1,19 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import KanaCard from "../../components/KanaCard.tsx";
-import React, { useEffect, useRef, useState } from "react";
 import {
   faArrowRotateRight,
   faClock,
-  faRefresh,
+  faRefresh
 } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React, { useEffect, useRef, useState } from "react";
+import KanaCard from "../../components/KanaCard.tsx";
 import KatanaIcon from "../../components/KatanaIcon.tsx";
-import { GameState } from "./types.ts";
-import { getRandomKana, getKanas } from "./helpers.ts";
 import { useAppDispatch, useAppSelector } from "../../store.ts";
 import { Answer, addAnswer } from "./answersSlice.ts";
+import { getKanas, getRandomKana } from "./helpers.ts";
 import { useSettingsSelector } from "./settingsSlice.ts";
+import { GameState } from "./types.ts";
+import SettingsMenu from "./SettingsMenu.tsx";
 
-function SettingsMenu() {
-  return <></>;
-}
 
 export default function Game() {
   // Get settings from redux store
@@ -23,7 +21,7 @@ export default function Game() {
   const { kanaType, timeLimit } = settings;
 
   const kanas = getKanas(kanaType);
-  const [gameState, setGameState] = useState<GameState>("in-game");
+  const [gameState, setGameState] = useState<GameState>("pre-game");
   const gameIsActive = gameState === "in-game";
 
   const [timeLeft, setTimeLeft] = useState<number>(timeLimit);
