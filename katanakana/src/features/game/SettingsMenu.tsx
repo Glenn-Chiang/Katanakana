@@ -38,38 +38,38 @@ export default function SettingsMenu({handleStart}: {handleStart: () => void}) {
   };
 
   return (
-    <section className="flex flex-col items-center p-4">
-      <h1 className="flex items-center gap-2">
+    <section className="flex flex-col items-center p-4 h-screen justify-center ">
+      <h1 className="flex items-center gap-2 p-4">
         <FontAwesomeIcon icon={faGear} />
         Game Settings
       </h1>
-      <section className="w-full flex flex-col gap-4 p-4">
-        <div className="flex justify-between">
+      <section className="w-5/6 flex flex-col gap-4 p-4 rounded">
+        <div className="flex justify-between items-center">
           <span>Kana Type</span>
           <select
             onChange={handleSelectKanaType}
             value={kanaType}
-            className="bg-black capitalize rounded"
+            className="bg-black capitalize rounded p-2"
           >
             {kanaTypeOptions}
           </select>
         </div>
-        <div className="flex justify-between">
-          <span>
+        <div className="flex justify-between items-center">
+          <span className="flex gap-2 items-center">
             <FontAwesomeIcon icon={faClock} />
             Time Limit
           </span>
           <select
             onChange={handleSelectTimeLimit}
             value={timeLimit}
-            className="bg-black capitalize rounded"
+            className="bg-black capitalize rounded p-2"
           >
             {timeLimitOptions}
           </select>
         </div>
       </section>
       <div className="p-4">
-        <button onClick={handleStart} className="flex gap-2 items-center bg-rose-500 text-white p-2 rounded">
+        <button onClick={handleStart} className="flex gap-2 items-center p-2 rounded border-2 border-slate-400 hover:text-white hover:border-white">
           <FontAwesomeIcon icon={faPlay} />
           Start
         </button>

@@ -22,7 +22,7 @@ export default function Game() {
   const { kanaType, timeLimit } = settings;
 
   const kanas = getKanas(kanaType);
-  const [gameState, setGameState] = useState<GameState>("in-game");
+  const [gameState, setGameState] = useState<GameState>("pre-game");
   const gameIsActive = gameState === "in-game";
 
   const getKana = useCallback(() => getRandomKana(kanas), [kanas]);
@@ -58,7 +58,9 @@ export default function Game() {
   const handleInputChange: React.ChangeEventHandler<HTMLInputElement> = (
     event
   ): void => {
-    if (!gameIsActive) return;
+    if (gameState === "post-game") return;
+    // Game is started once user starts typing
+    if (gameState === "pre-game") setGameState("in-game");
     setInputValue(event.target.value);
   };
 
@@ -83,25 +85,28 @@ export default function Game() {
   const handleSkip = () => {
     setKana(getKana());
     setInputValue("");
-    const answer: Answer = { kana, correct: false };
+    const answer: Answer = { kana, correct: false }; // Mark answer as wrong if user skips kana
     dispatch(addAnswer(answer));
     inputRef.current?.focus();
   };
 
   const handleRestart = () => {
-    setTimeLeft(30);
+    setTimeLeft(timeLimit);
     setScore(0);
     setKana(getKana());
-    setGameState("in-game");
+    setGameState("pre-game");
+    setInputValue("");
     inputRef.current?.focus();
+    setSettingsShown(false);
   };
 
-  const showSettings = () => setGameState("pre-game");
+  const showSettings = () => setSettingsShown(true);
 
   const inputRef: React.RefObject<HTMLInputElement> = useRef(null);
 
-  if (gameState === "pre-game")
-    return <SettingsMenu handleStart={() => setGameState("in-game")} />;
+  const [settingsShown, setSettingsShown] = useState(false);
+
+  if (settingsShown) return <SettingsMenu handleStart={handleRestart} />;
 
   return (
     <main className="h-screen flex flex-col justify-between">
