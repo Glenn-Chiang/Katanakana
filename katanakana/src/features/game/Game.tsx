@@ -5,7 +5,7 @@ import {
   faRefresh,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import KanaCard from "../../components/KanaCard.tsx";
 import KatanaIcon from "../../components/KatanaIcon.tsx";
 import { useAppDispatch, useAppSelector } from "../../store.ts";
@@ -14,6 +14,7 @@ import { getKanas, getRandomKana } from "./helpers.ts";
 import { useSettingsSelector } from "./settingsSlice.ts";
 import { GameState } from "./types.ts";
 import SettingsMenu from "./SettingsMenu.tsx";
+import { Kana } from "../../types.ts";
 
 export default function Game() {
   // Get settings from redux store
@@ -21,11 +22,13 @@ export default function Game() {
   const { kanaType, timeLimit } = settings;
 
   const kanas = getKanas(kanaType);
-  const [gameState, setGameState] = useState<GameState>("pre-game");
+  const [gameState, setGameState] = useState<GameState>("in-game");
   const gameIsActive = gameState === "in-game";
 
+  const getKana = useCallback(() => getRandomKana(kanas), [kanas]);
+
+  const [kana, setKana] = useState<Kana>(getKana()); // The current kana that the user has to identify
   const [timeLeft, setTimeLeft] = useState<number>(timeLimit);
-  const [kana, setKana] = useState(getRandomKana(kanas)); // The current kana that the user has to identify
   const [score, setScore] = useState(0);
   // Record of answers entered by user in current game
   const answers = useAppSelector((state) => state.answers);
@@ -69,7 +72,7 @@ export default function Game() {
     if (event.key !== "Enter") return;
     // If correct, move to next kana and add to score
     if (inputValue.toLowerCase() === kana.id) {
-      setKana(getRandomKana(kanas));
+      setKana(getKana());
       setInputValue("");
       setScore((score) => score + 1);
       const answer: Answer = { kana, correct: true };
@@ -77,12 +80,18 @@ export default function Game() {
     }
   };
 
-  const handleSkip = () => {};
+  const handleSkip = () => {
+    setKana(getKana());
+    setInputValue("");
+    const answer: Answer = { kana, correct: false };
+    dispatch(addAnswer(answer));
+    inputRef.current?.focus();
+  };
 
   const handleRestart = () => {
     setTimeLeft(30);
     setScore(0);
-    setKana(getRandomKana(kanas));
+    setKana(getKana());
     setGameState("in-game");
     inputRef.current?.focus();
   };
@@ -144,9 +153,13 @@ function SettingsButton({ onClick, disabled }: ButtonProps) {
 }
 
 function SkipButton({ onClick }: ButtonProps) {
+  const handleClick: React.MouseEventHandler<HTMLButtonElement> = (event) => {
+    event.currentTarget.blur(); // Unfocus restart button after it is clicked
+    onClick();
+  };
   return (
     <button
-      onClick={onClick}
+      onClick={handleClick}
       className="flex gap-2 items-center hover:text-white"
     >
       <FontAwesomeIcon icon={faArrowRotateRight} />
