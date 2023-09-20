@@ -1,7 +1,8 @@
 import {
   faArrowRotateRight,
   faClock,
-  faRefresh
+  faGear,
+  faRefresh,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useRef, useState } from "react";
@@ -14,7 +15,6 @@ import { useSettingsSelector } from "./settingsSlice.ts";
 import { GameState } from "./types.ts";
 import SettingsMenu from "./SettingsMenu.tsx";
 
-
 export default function Game() {
   // Get settings from redux store
   const settings = useSettingsSelector();
@@ -25,7 +25,7 @@ export default function Game() {
   const gameIsActive = gameState === "in-game";
 
   const [timeLeft, setTimeLeft] = useState<number>(timeLimit);
-  const [kana, setKana] = useState(getRandomKana(kanas));
+  const [kana, setKana] = useState(getRandomKana(kanas)); // The current kana that the user has to identify
   const [score, setScore] = useState(0);
   // Record of answers entered by user in current game
   const answers = useAppSelector((state) => state.answers);
@@ -87,9 +87,12 @@ export default function Game() {
     inputRef.current?.focus();
   };
 
+  const showSettings = () => setGameState("pre-game");
+
   const inputRef: React.RefObject<HTMLInputElement> = useRef(null);
 
-  if (gameState === "pre-game") return <SettingsMenu />;
+  if (gameState === "pre-game")
+    return <SettingsMenu handleStart={() => setGameState("in-game")} />;
 
   return (
     <main className="h-screen flex flex-col justify-between">
@@ -110,6 +113,10 @@ export default function Game() {
       </section>
       <div className="p-4 flex justify-between text-slate-400">
         <SkipButton onClick={handleSkip} />
+        <SettingsButton
+          onClick={showSettings}
+          disabled={gameState === "in-game"}
+        />
         <RestartButton onClick={handleRestart} />
       </div>
     </main>
@@ -118,7 +125,23 @@ export default function Game() {
 
 type ButtonProps = {
   onClick: () => void;
+  disabled?: boolean;
 };
+
+function SettingsButton({ onClick, disabled }: ButtonProps) {
+  return (
+    <button
+      disabled={disabled}
+      onClick={onClick}
+      className={`flex gap-2 items-center ${
+        disabled ? "text-slate-600" : "hover:text-white"
+      }`}
+    >
+      <FontAwesomeIcon icon={faGear} />
+      Settings
+    </button>
+  );
+}
 
 function SkipButton({ onClick }: ButtonProps) {
   return (

@@ -11,7 +11,7 @@ import { faGear, faClock, faPlay } from "@fortawesome/free-solid-svg-icons";
 import React from "react";
 import { useAppDispatch } from "../../store";
 
-export default function SettingsMenu() {
+export default function SettingsMenu({handleStart}: {handleStart: () => void}) {
   const { kanaType, timeLimit } = useSettingsSelector();
 
   const kanaTypeOptions = kanaTypes.map((kanaType, index) => (
@@ -69,7 +69,7 @@ export default function SettingsMenu() {
         </div>
       </section>
       <div className="p-4">
-        <button className="flex gap-2 items-center bg-rose-500 text-white p-2 rounded">
+        <button onClick={handleStart} className="flex gap-2 items-center bg-rose-500 text-white p-2 rounded">
           <FontAwesomeIcon icon={faPlay} />
           Start
         </button>
