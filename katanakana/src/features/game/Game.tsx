@@ -1,8 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import KanaCard from "../../components/KanaCard.tsx";
-import hiraganaList from "../../constants/hiragana.ts";
-// import katakanaList from '../../constants/katakana.ts'
-import { Kana } from "../../types.ts";
 import { useEffect, useRef, useState } from "react";
 import {
   faArrowRotateRight,
@@ -10,17 +7,12 @@ import {
   faRefresh,
 } from "@fortawesome/free-solid-svg-icons";
 import KatanaIcon from "../../components/KatanaIcon.tsx";
-
-const getRandomKana = (kanas: Kana[]) => {
-  const randomIndex = Math.floor(Math.random() * kanas.length);
-  return kanas[randomIndex];
-};
-
-type GameState = "pre-game" | "in-game" | "post-game";
-// type KanaType = "hiragana" | "katakana" | "all"
+import { KanaType, GameState } from "./types.ts";
+import { getRandomKana, getKanas } from "./helpers.ts";
 
 export default function Game() {
-  const kanas: Kana[] = hiraganaList;
+  const [kanaType, setKanaType] = useState<KanaType>("katakana");
+  const kanas = getKanas(kanaType);
   const [kana, setKana] = useState(getRandomKana(kanas));
 
   const [gameState, setGameState] = useState<GameState>("in-game");
@@ -48,6 +40,7 @@ export default function Game() {
     }
   }, [time]);
 
+  // Handle user input
   const [inputValue, setInputValue] = useState("");
   const handleInputChange: React.ChangeEventHandler<HTMLInputElement> = (
     event
@@ -75,12 +68,12 @@ export default function Game() {
   const handleRestart = () => {};
 
   return (
-    <>
-      <div className="p-4 flex justify-between">
+    <main className="h-screen flex flex-col justify-between">
+      <div className="p-4 flex justify-between text-4xl">
         <Clock time={time} />
         <Score score={score} />
       </div>
-      <section className="flex flex-col gap-4 p-4 items-center ">
+      <section className="flex flex-col gap-4 p-4 items-center justify-center h-1/2">
         <KanaCard kana={kana} />
         <input
           value={inputValue}
@@ -94,7 +87,7 @@ export default function Game() {
         <SkipButton onClick={handleSkip} />
         <RestartButton onClick={handleRestart} />
       </div>
-    </>
+    </main>
   );
 }
 

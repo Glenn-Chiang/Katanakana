@@ -10,7 +10,7 @@
 
 @layer base {
   body {
-    @apply bg-black text-slate-300 text-4xl
+    @apply bg-black text-slate-300 text-2xl 
   }
   button {
     @apply transition
