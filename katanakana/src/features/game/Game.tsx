@@ -1,11 +1,15 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import KanaCard from "../../components/KanaCard.tsx";
-import hiraganaList from "../../kanaData/hiragana.ts";
+import hiraganaList from "../../constants/hiragana.ts";
+// import katakanaList from '../../constants/katakana.ts'
 import { Kana } from "../../types.ts";
 import { useEffect, useRef, useState } from "react";
-import { faClock } from "@fortawesome/free-solid-svg-icons";
+import {
+  faArrowRotateRight,
+  faClock,
+  faRefresh,
+} from "@fortawesome/free-solid-svg-icons";
 import KatanaIcon from "../../components/KatanaIcon.tsx";
-// import katakanaList from '../../kanaData/katakana.ts'
 
 const getRandomKana = (kanas: Kana[]) => {
   const randomIndex = Math.floor(Math.random() * kanas.length);
@@ -13,8 +17,9 @@ const getRandomKana = (kanas: Kana[]) => {
 };
 
 type GameState = "pre-game" | "in-game" | "post-game";
+// type KanaType = "hiragana" | "katakana" | "all"
 
-export default function Dojo() {
+export default function Game() {
   const kanas: Kana[] = hiraganaList;
   const [kana, setKana] = useState(getRandomKana(kanas));
 
@@ -65,6 +70,10 @@ export default function Dojo() {
     }
   };
 
+  const handleSkip = () => {};
+
+  const handleRestart = () => {};
+
   return (
     <>
       <div className="p-4 flex justify-between">
@@ -81,7 +90,39 @@ export default function Dojo() {
           className="bg-black outline-none border-b-2 border-slate-400 text-4xl w-1/4 text-center"
         />
       </section>
+      <div className="p-4 flex justify-between text-slate-400">
+        <SkipButton onClick={handleSkip} />
+        <RestartButton onClick={handleRestart} />
+      </div>
     </>
+  );
+}
+
+type ButtonProps = {
+  onClick: () => void;
+};
+
+function SkipButton({ onClick }: ButtonProps) {
+  return (
+    <button
+      onClick={onClick}
+      className="flex gap-2 items-center hover:text-white"
+    >
+      <FontAwesomeIcon icon={faArrowRotateRight} />
+      Skip
+    </button>
+  );
+}
+
+function RestartButton({ onClick }: ButtonProps) {
+  return (
+    <button
+      onClick={onClick}
+      className="flex gap-2 items-center hover:text-white"
+    >
+      <FontAwesomeIcon icon={faRefresh} />
+      Restart
+    </button>
   );
 }
 
