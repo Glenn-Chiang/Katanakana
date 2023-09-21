@@ -1,10 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { KanaType } from "./types";
 import { useAppSelector } from "../../store";
+import { KanaType } from "../../types";
 
-export const timeLimits = [15, 30, 60] as const
+export const timeLimits = [15, 30, 60] as const;
 
-export type TimeLimit = typeof timeLimits[number];
+export type TimeLimit = (typeof timeLimits)[number];
 
 interface Settings {
   kanaType: KanaType;
@@ -29,6 +29,7 @@ const settingsSlice = createSlice({
   },
 });
 
-export const useSettingsSelector = () => useAppSelector(state => state.settings)
+export const useSettingsSelector = () =>
+  useAppSelector((state) => state.settings);
 export const { setKanaType, setTimeLimit } = settingsSlice.actions;
 export default settingsSlice.reducer;

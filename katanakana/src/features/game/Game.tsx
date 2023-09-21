@@ -12,11 +12,11 @@ import KatanaIcon from "../../components/KatanaIcon.tsx";
 import { useAppDispatch, useAppSelector } from "../../store.ts";
 import { Answer, addAnswer, resetAnswers } from "./answersSlice.ts";
 import { getKanas, getRandomKana } from "./helpers.ts";
-import { useSettingsSelector } from "./settingsSlice.ts";
-import { GameState } from "./types.ts";
-import SettingsMenu from "./SettingsMenu.tsx";
+import { useSettingsSelector } from "../settings/settingsSlice.ts";
+import { GameState } from "../../types.ts";
 import { Kana } from "../../types.ts";
 import BaseLayout from "../../components/BaseLayout.tsx";
+import SettingsMenu from "../settings/SettingsMenu.tsx";
 
 export default function Game() {
   // Get settings from redux store

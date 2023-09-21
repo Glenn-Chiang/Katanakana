@@ -4,22 +4,30 @@ import {
   setTimeLimit,
   useSettingsSelector,
 } from "./settingsSlice";
-import { KanaType, kanaTypes } from "./types";
+import { KanaType, kanaTypes } from "../../types";
 import { timeLimits } from "./settingsSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGear, faClock, faPlay } from "@fortawesome/free-solid-svg-icons";
 import React from "react";
 import { useAppDispatch } from "../../store";
 
-export default function SettingsMenu({handleStart}: {handleStart: () => void}) {
+export default function SettingsMenu({
+  handleStart,
+}: {
+  handleStart: () => void;
+}) {
   const { kanaType, timeLimit } = useSettingsSelector();
 
   const kanaTypeOptions = kanaTypes.map((kanaType, index) => (
-    <option key={index} className="text-base">{kanaType}</option>
+    <option key={index} className="text-base">
+      {kanaType}
+    </option>
   ));
 
   const timeLimitOptions = timeLimits.map((timeLimit, index) => (
-    <option key={index} className="text-base">{timeLimit}</option>
+    <option key={index} className="text-base">
+      {timeLimit}
+    </option>
   ));
 
   const dispatch = useAppDispatch();
@@ -69,7 +77,10 @@ export default function SettingsMenu({handleStart}: {handleStart: () => void}) {
         </div>
       </section>
       <div className="p-4">
-        <button onClick={handleStart} className="flex gap-2 items-center p-2 rounded border-2 border-slate-400 hover:text-white hover:border-white">
+        <button
+          onClick={handleStart}
+          className="flex gap-2 items-center p-2 rounded border-2 border-slate-400 hover:text-white hover:border-white"
+        >
           <FontAwesomeIcon icon={faPlay} />
           Start
         </button>
