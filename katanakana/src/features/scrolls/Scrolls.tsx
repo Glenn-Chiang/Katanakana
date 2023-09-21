@@ -14,7 +14,7 @@ export default function Scrolls() {
         kanaType={kanaType}
         setKanaType={(kanaType: KanaType) => setKanaType(kanaType)}
       />
-      <section className="p-8 grid-cols-1 md:grid-cols-5 grid gap-10 justify-items-center">
+      <section className="p-8 grid-cols-1 md:grid-cols-5 grid gap-10 justify-items-center mt-10 mb-20">
         {kanas.map((kana) => (
           <KanaCard key={kana.id} kana={kana} withRomaji={true} />
         ))}
@@ -31,11 +31,12 @@ interface KanaMenuProps {
 function KanaMenu({ kanaType: selectedKanaType, setKanaType }: KanaMenuProps) {
   const handleClick = (kanaType: KanaType) => {
     setKanaType(kanaType);
+    window.scrollTo(0,0)
   };
 
   return (
-    <div className="flex">
-      {kanaTypes.map((kanaType, index) => (
+    <div className="flex fixed w-screen z-10 bg-black top-0">
+      {kanaTypes.slice(0,2).map((kanaType, index) => (
         <button
           key={index}
           onClick={() => handleClick(kanaType)}

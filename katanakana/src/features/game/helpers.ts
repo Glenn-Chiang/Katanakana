@@ -18,7 +18,7 @@ const getKanas = (kanaType: KanaType): Kana[] => {
       kanas = katakanaList;
       break;
     case "all":
-      kanas = hiraganaList; // todo
+      kanas = hiraganaList.concat(katakanaList); 
   }
   return kanas;
 };
