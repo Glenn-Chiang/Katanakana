@@ -17,6 +17,7 @@ import { GameState } from "../../types.ts";
 import { Kana } from "../../types.ts";
 import BaseLayout from "../../components/BaseLayout.tsx";
 import SettingsMenu from "../settings/SettingsMenu.tsx";
+import { Link } from "react-router-dom";
 
 export default function Game() {
   // Get settings from redux store
@@ -102,17 +103,16 @@ export default function Game() {
     dispatch(resetAnswers());
   };
 
-  const showSettings = () => setSettingsShown(true);
-
   const inputRef: React.RefObject<HTMLInputElement> = useRef(null);
-
+    
+  const showSettings = () => setSettingsShown(true);
   const [settingsShown, setSettingsShown] = useState(false);
 
   if (settingsShown) return <SettingsMenu handleStart={handleRestart} />;
 
   return (
     <BaseLayout>
-      <main className="h-[calc(100vh)] flex flex-col justify-stretch">
+      <main className="h-screen flex flex-col justify-stretch">
         <div className="p-4 flex justify-between text-4xl">
           <Clock time={timeLeft} />
           <Score score={score} />
@@ -156,10 +156,10 @@ function ResultCard({ score }: { score: number }) {
         </div>
         <span className="text-8xl absolute text-white">{score}</span>
       </section>
-      <button className="p-4 flex gap-2 items-center bg-slate-800 rounded-xl">
+      <Link to={'/dojo/review'} className="p-4 flex gap-2 items-center bg-slate-800 rounded-xl">
         <FontAwesomeIcon icon={faMagnifyingGlass} />
         Review
-      </button>
+      </Link>
     </>
   );
 }
