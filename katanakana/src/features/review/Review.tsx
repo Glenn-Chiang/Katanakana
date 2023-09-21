@@ -1,27 +1,27 @@
-import {
-  faChevronRight,
-  faExclamationCircle
-} from "@fortawesome/free-solid-svg-icons";
+import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import BaseLayout from "../../components/BaseLayout";
 import KanaCard from "../../components/KanaCard";
-import KatanaIcon from "../../components/KatanaIcon";
 import { useAppSelector } from "../../store";
 import { Answer } from "../game/answersSlice";
 
 interface ReviewProps {
-  restart: () => void
+  restart: () => void;
 }
-export default function Review({restart}: ReviewProps) {
+export default function Review({ restart }: ReviewProps) {
   const answers = useAppSelector((state) => state.answers);
+  // const correctAnswers = answers.filter((answer) => answer.correct);
 
   return (
     <BaseLayout>
+      {/* <div className="fixed top-0 p-4 z-20 bg-black">
+        <span>Score </span><span>{correctAnswers.length} / {answers.length}</span>
+      </div> */}
+
       <button
         onClick={restart}
         className="flex gap-2 items-center fixed right-0 p-4 z-10 bg-black top-0 w-full justify-end"
       >
-        <div className="w-10 h-10"><KatanaIcon/></div>
         Train again
         <FontAwesomeIcon icon={faChevronRight} />
       </button>
@@ -48,12 +48,6 @@ function KanaAnswer({ answer }: { answer: Answer }) {
       }`}
     >
       <KanaCard kana={answer.kana} withRomaji={true} />
-      {answer.correct || (
-        <span className="text-2xl text-rose-400 flex items-center gap-2">
-          <FontAwesomeIcon icon={faExclamationCircle} />
-          Skipped
-        </span>
-      )}
     </article>
   );
 }

@@ -10,7 +10,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import BaseLayout from "../../components/BaseLayout.tsx";
 import KanaCard from "../../components/KanaCard.tsx";
 import KatanaIcon from "../../components/KatanaIcon.tsx";
-import { useAppDispatch, useAppSelector } from "../../store.ts";
+import { useAppDispatch } from "../../store.ts";
 import { GameState, Kana } from "../../types.ts";
 import Review from "../review/Review.tsx";
 import SettingsMenu from "../settings/SettingsMenu.tsx";
@@ -32,8 +32,8 @@ export default function Game() {
   const [kana, setKana] = useState<Kana>(getKana()); // The current kana that the user has to identify
   const [timeLeft, setTimeLeft] = useState<number>(timeLimit);
   const [score, setScore] = useState(0);
-  // Record of answers entered by user in current game
-  const answers = useAppSelector((state) => state.answers);
+
+  const dispatch = useAppDispatch();
 
   // Start timer once gamestate is in-game
   const timerRef = useRef<undefined | number>(undefined);
@@ -47,12 +47,13 @@ export default function Game() {
 
   // Stop game when timer reaches 0
   useEffect(() => {
-    if (timeLeft) return;
-    console.log("time's up");
+    if (!gameIsActive || timeLeft) return;
+
     clearInterval(timerRef.current); // Clear timer
     setInputValue("");
     setGameState("post-game");
-  }, [timeLeft, answers]);
+    dispatch(addAnswer({ kana, correct: false })); // User will miss the last-shown kana, which will be marked as incorrect (questionable)
+  }, [timeLeft, kana, dispatch, gameIsActive]);
 
   // Handle user input
   const [inputValue, setInputValue] = useState("");
@@ -64,8 +65,6 @@ export default function Game() {
     if (gameState === "pre-game") setGameState("in-game");
     setInputValue(event.target.value);
   };
-
-  const dispatch = useAppDispatch();
 
   // Evaluate accuracy of input when user hits enter
   const handleKeyDown: React.KeyboardEventHandler<HTMLInputElement> = (
