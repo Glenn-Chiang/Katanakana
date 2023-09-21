@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 function Navbar() {
   return (
-    <nav className="bg-black z-10 fixed w-screen bottom-0 sm:top-0 left-0 h-12 p-4 py-8 flex items-center justify-center">
+    <nav className="bg-black shadow shadow-white z-10 fixed w-screen bottom-0 sm:top-0 left-0 h-12 p-4 py-8 flex items-center justify-center">
       <Link to={'/'}>
         <FontAwesomeIcon icon={faHome}/>
       </Link>
@@ -21,7 +21,7 @@ export default function BaseLayout({
   return (
     <>
       <Navbar />
-      <div className="mb-12">{children}</div>
+      <div className="">{children}</div>
     </>
   );
 }
