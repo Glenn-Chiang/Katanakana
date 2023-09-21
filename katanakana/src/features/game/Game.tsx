@@ -16,6 +16,7 @@ import { useSettingsSelector } from "./settingsSlice.ts";
 import { GameState } from "./types.ts";
 import SettingsMenu from "./SettingsMenu.tsx";
 import { Kana } from "../../types.ts";
+import BaseLayout from "../../components/BaseLayout.tsx";
 
 export default function Game() {
   // Get settings from redux store
@@ -98,7 +99,7 @@ export default function Game() {
     setSettingsShown(false);
     setInputValue("");
     inputRef.current?.focus();
-    dispatch(resetAnswers())
+    dispatch(resetAnswers());
   };
 
   const showSettings = () => setSettingsShown(true);
@@ -110,37 +111,39 @@ export default function Game() {
   if (settingsShown) return <SettingsMenu handleStart={handleRestart} />;
 
   return (
-    <main className="h-screen flex flex-col justify-between">
-      <div className="p-4 flex justify-between text-4xl">
-        <Clock time={timeLeft} />
-        <Score score={score} />
-      </div>
-      <section className="flex flex-col gap-4 p-4 items-center justify-center h-1/2">
-        {gameState === "post-game" ? (
-          <ResultCard score={score} />
-        ) : (
-          <>
-            <KanaCard kana={kana} />
-            <input
-              ref={inputRef}
-              value={inputValue}
-              onKeyDown={handleKeyDown}
-              onChange={handleInputChange}
-              autoFocus
-              className="bg-black outline-none border-b-2 border-slate-400 text-4xl w-1/4 text-center"
-            />
-          </>
-        )}
-      </section>
-      <div className="p-4 flex justify-between">
-        <SkipButton onClick={handleSkip} />
-        <RestartButton onClick={handleRestart} />
-        <SettingsButton
-          onClick={showSettings}
-          disabled={gameState === "in-game"}
-        />
-      </div>
-    </main>
+    <BaseLayout>
+      <main className="h-[calc(100vh)] flex flex-col justify-stretch">
+        <div className="p-4 flex justify-between text-4xl">
+          <Clock time={timeLeft} />
+          <Score score={score} />
+        </div>
+        <section className="flex flex-col gap-4 p-4 items-center justify-center h-1/2">
+          {gameState === "post-game" ? (
+            <ResultCard score={score} />
+          ) : (
+            <>
+              <KanaCard kana={kana} />
+              <input
+                ref={inputRef}
+                value={inputValue}
+                onKeyDown={handleKeyDown}
+                onChange={handleInputChange}
+                autoFocus
+                className="bg-black outline-none border-b-2 border-slate-400 text-4xl w-1/4 text-center"
+              />
+            </>
+          )}
+        </section>
+        <div className="p-4 flex gap-4 flex-col items-center">
+          <SkipButton onClick={handleSkip} disabled={gameState !== "in-game"} />
+          <RestartButton onClick={handleRestart} />
+          <SettingsButton
+            onClick={showSettings}
+            disabled={gameState === "in-game"}
+          />
+        </div>
+      </main>
+    </BaseLayout>
   );
 }
 
@@ -172,7 +175,7 @@ function SettingsButton({ onClick, disabled }: ButtonProps) {
       disabled={disabled}
       onClick={onClick}
       className={`flex gap-2 items-center ${
-        disabled ? "text-slate-600" : "hover:text-white"
+        disabled ? "text-slate-500" : "hover:text-white"
       }`}
     >
       <FontAwesomeIcon icon={faGear} />
@@ -181,15 +184,18 @@ function SettingsButton({ onClick, disabled }: ButtonProps) {
   );
 }
 
-function SkipButton({ onClick }: ButtonProps) {
+function SkipButton({ onClick, disabled }: ButtonProps) {
   const handleClick: React.MouseEventHandler<HTMLButtonElement> = (event) => {
     event.currentTarget.blur(); // Unfocus restart button after it is clicked
     onClick();
   };
   return (
     <button
+      disabled={disabled}
       onClick={handleClick}
-      className="flex gap-2 items-center hover:text-white"
+      className={`flex gap-2 items-center ${
+        disabled ? "text-slate-500" : "hover:text-white"
+      }`}
     >
       <FontAwesomeIcon icon={faArrowRotateRight} />
       Skip
