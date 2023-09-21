@@ -1,5 +1,5 @@
 import { Kana } from "../../types.ts";
-import { KanaType } from "./types.ts";
+import { KanaType } from "../../types.ts";
 import hiraganaList from "../../constants/hiragana.ts";
 import katakanaList from "../../constants/katakana.ts";
 

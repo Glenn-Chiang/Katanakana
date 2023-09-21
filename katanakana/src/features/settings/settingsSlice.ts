@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { useAppSelector } from "../../store";
 import { KanaType } from "../../types";
 
-export const timeLimits = [15, 30, 60] as const;
+export const timeLimits = [15, 30, 60, 120] as const;
 
 export type TimeLimit = (typeof timeLimits)[number];
 

@@ -1,22 +1,51 @@
 import { useState } from "react";
-import hiraganaList from "../../constants/hiragana.js";
-import katakanaList from "../../constants/katakana.js";
-import { Kana } from "../../types.js";
-import KanaCard from "../../components/KanaCard.js";
-
-type KanaType = "hiragana" | "katakana";
+import BaseLayout from "../../components/BaseLayout";
+import KanaCard from "../../components/KanaCard";
+import { KanaType, kanaTypes } from "../../types";
+import { getKanas } from "../game/helpers.js";
 
 export default function Scrolls() {
   const [kanaType, setKanaType] = useState<KanaType>("hiragana");
-  const kanas: Kana[] = kanaType === "hiragana" ? hiraganaList : katakanaList;
+  const kanas = getKanas(kanaType);
+
   return (
-    <>
-      <h1></h1>
-      <section className="p-4 grid-cols-3 grid gap-4">
+    <BaseLayout>
+      <KanaMenu
+        kanaType={kanaType}
+        setKanaType={(kanaType: KanaType) => setKanaType(kanaType)}
+      />
+      <section className="p-8 grid-cols-1 md:grid-cols-5 grid gap-10 justify-items-center">
         {kanas.map((kana) => (
-          <KanaCard key={kana.id} kana={kana} withRomaji={true}/>
+          <KanaCard key={kana.id} kana={kana} withRomaji={true} />
         ))}
       </section>
-    </>
+    </BaseLayout>
+  );
+}
+
+interface KanaMenuProps {
+  kanaType: KanaType;
+  setKanaType: (kanaType: KanaType) => void;
+}
+
+function KanaMenu({ kanaType: selectedKanaType, setKanaType }: KanaMenuProps) {
+  const handleClick = (kanaType: KanaType) => {
+    setKanaType(kanaType);
+  };
+
+  return (
+    <div className="flex">
+      {kanaTypes.map((kanaType, index) => (
+        <button
+          key={index}
+          onClick={() => handleClick(kanaType)}
+          className={`flex-1 capitalize p-2 ${
+            kanaType === selectedKanaType && "border-b-2 border-white"
+          }`}
+        >
+          {kanaType}
+        </button>
+      ))}
+    </div>
   );
 }
