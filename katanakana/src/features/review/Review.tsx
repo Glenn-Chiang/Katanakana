@@ -1,23 +1,32 @@
+import {
+  faChevronRight,
+  faExclamationCircle
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useNavigate } from "react-router-dom";
 import BaseLayout from "../../components/BaseLayout";
+import KanaCard from "../../components/KanaCard";
 import { useAppSelector } from "../../store";
 import { Answer } from "../game/answersSlice";
-import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
-import { Link } from "react-router-dom";
-import KanaCard from "../../components/KanaCard";
 
 export default function Review() {
   const answers = useAppSelector((state) => state.answers);
 
+  const navigate = useNavigate()
+  const handleClickNext = () => {
+    
+    navigate('/dojo')
+  }
+
   return (
     <BaseLayout>
-      <Link
-        to={"/dojo"}
+      <button
+        onClick={handleClickNext}
         className="flex gap-2 items-center fixed right-0 p-4 z-10 bg-black top-0 w-full justify-end"
       >
         Next Game
         <FontAwesomeIcon icon={faChevronRight} />
-      </Link>
+      </button>
 
       <section className="flex items-center justify-center flex-col gap-20 my-20">
         {answers.length > 0 ? (
@@ -42,7 +51,10 @@ function KanaAnswer({ answer }: { answer: Answer }) {
     >
       <KanaCard kana={answer.kana} withRomaji={true} />
       {answer.correct || (
-        <span className="text-2xl text-rose-400">Skipped</span>
+        <span className="text-2xl text-rose-400 flex items-center gap-2">
+          <FontAwesomeIcon icon={faExclamationCircle} />
+          Skipped
+        </span>
       )}
     </article>
   );

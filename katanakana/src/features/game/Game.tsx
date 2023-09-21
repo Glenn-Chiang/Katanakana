@@ -92,7 +92,7 @@ export default function Game() {
     inputRef.current?.focus();
   };
 
-  const handleRestart = () => {
+  const handleRestart = useCallback(() => {
     setTimeLeft(timeLimit);
     setScore(0);
     setKana(getKana());
@@ -101,7 +101,11 @@ export default function Game() {
     setInputValue("");
     inputRef.current?.focus();
     dispatch(resetAnswers());
-  };
+  }, [dispatch, getKana, timeLimit]);
+
+  useEffect(() => {
+    handleRestart();
+  }, [handleRestart]);
 
   const inputRef: React.RefObject<HTMLInputElement> = useRef(null);
 
@@ -127,7 +131,7 @@ export default function Game() {
             <ResultCard score={score} />
           ) : (
             <>
-              <KanaCard kana={kana} withRomaji={false}/>
+              <KanaCard kana={kana} withRomaji={false} />
               <input
                 ref={inputRef}
                 value={inputValue}
