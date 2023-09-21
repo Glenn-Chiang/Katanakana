@@ -51,9 +51,9 @@ export default function SettingsMenu({
         <FontAwesomeIcon icon={faGear} />
         Game Settings
       </h1>
-      <section className="w-5/6 md:w-1/2 flex flex-col gap-4 p-4 rounded">
+      <section className="w-11/12 md:w-1/2 flex flex-col gap-4 p-4 rounded">
         <div className="flex justify-between items-center">
-          <span>Kana Type</span>
+          <span className="text-slate-400">Kana Type</span>
           <select
             onChange={handleSelectKanaType}
             value={kanaType}
@@ -63,7 +63,7 @@ export default function SettingsMenu({
           </select>
         </div>
         <div className="flex justify-between items-center">
-          <span className="flex gap-2 items-center">
+          <span className="flex gap-2 items-center text-slate-400">
             <FontAwesomeIcon icon={faClock} />
             Time Limit
           </span>
@@ -79,7 +79,7 @@ export default function SettingsMenu({
       <div className="p-4">
         <button
           onClick={handleStart}
-          className="flex gap-2 items-center p-2 rounded border-2 border-slate-400 hover:text-white hover:border-white"
+          className="flex gap-2 items-center p-2 rounded border-2 bg-white text-black"
         >
           <FontAwesomeIcon icon={faPlay} />
           Start

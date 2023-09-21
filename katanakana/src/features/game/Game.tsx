@@ -104,11 +104,16 @@ export default function Game() {
   };
 
   const inputRef: React.RefObject<HTMLInputElement> = useRef(null);
-    
+
   const showSettings = () => setSettingsShown(true);
   const [settingsShown, setSettingsShown] = useState(false);
 
-  if (settingsShown) return <SettingsMenu handleStart={handleRestart} />;
+  if (settingsShown)
+    return (
+      <BaseLayout>
+        <SettingsMenu handleStart={handleRestart} />
+      </BaseLayout>
+    );
 
   return (
     <BaseLayout>
@@ -122,7 +127,7 @@ export default function Game() {
             <ResultCard score={score} />
           ) : (
             <>
-              <KanaCard kana={kana} />
+              <KanaCard kana={kana} withRomaji={false}/>
               <input
                 ref={inputRef}
                 value={inputValue}
@@ -156,7 +161,10 @@ function ResultCard({ score }: { score: number }) {
         </div>
         <span className="text-8xl absolute text-white">{score}</span>
       </section>
-      <Link to={'/dojo/review'} className="p-4 flex gap-2 items-center bg-slate-800 rounded-xl">
+      <Link
+        to={"/dojo/review"}
+        className="p-4 flex gap-2 items-center bg-slate-800 rounded-xl"
+      >
         <FontAwesomeIcon icon={faMagnifyingGlass} />
         Review
       </Link>

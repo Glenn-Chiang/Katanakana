@@ -14,7 +14,7 @@ export default function Scrolls() {
       <h1></h1>
       <section className="p-4 grid-cols-3 grid gap-4">
         {kanas.map((kana) => (
-          <KanaCard key={kana.id} kana={kana} />
+          <KanaCard key={kana.id} kana={kana} withRomaji={true}/>
         ))}
       </section>
     </>

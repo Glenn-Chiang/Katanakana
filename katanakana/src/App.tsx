@@ -4,12 +4,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { faPlay } from "@fortawesome/free-solid-svg-icons";
 import { faScroll } from "@fortawesome/free-solid-svg-icons/faScroll";
-import { faChartBar } from "@fortawesome/free-solid-svg-icons/faChartBar";
 
 export default function App() {
   return (
-    <main className="flex flex-col items-center ">
-      <header className="text-5xl sm:text-8xl font-bold h-full w-full flex flex-col items-center m-0 p-4 relative">
+    <main className="h-screen flex flex-col items-center justify-center">
+      <header className=" text-5xl sm:text-8xl font-bold w-full flex flex-col items-center m-0 p-4 relative">
         <div className="h-4/5 w-4/5 sm:h-1/2 sm:w-1/3 flex justify-center items-center opacity-60">
           <KatanaIcon />
         </div>
@@ -30,14 +29,10 @@ function MenuButtons() {
       to: "/scrolls",
       icon: faScroll,
     },
-    {
-      label: "scores",
-      to: "/scores",
-      icon: faChartBar,
-    },
   ];
+
   return (
-    <nav className="flex flex-col md:flex-row gap-4 w-full items-center justify-center p-4">
+    <nav className="flex flex-col gap-4 w-full items-center justify-center p-4">
       {menuItems.map((menuItem, index) => (
         <MenuButton menuItem={menuItem} key={index} />
       ))}
@@ -57,7 +52,7 @@ function MenuButton({ menuItem }: { menuItem: MenuItem }) {
     <NavLink
       to={to}
       className={
-        "capitalize border-slate-400 text-slate-300 w-3/4 hover:w-4/5 hover:text-white hover:border-white border-2 flex items-center gap-2 p-2 rounded-md transition"
+        "capitalize border-slate-400 text-slate-300 w-3/4 hover:w-4/5 hover:text-white hover:border-white border-2 flex items-center gap-2 p-2 rounded-md transition justify-center"
       }
     >
       <FontAwesomeIcon icon={icon} />

@@ -4,6 +4,7 @@ import { useAppSelector } from "../../store";
 import { Answer } from "../game/answersSlice";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
+import KanaCard from "../../components/KanaCard";
 
 export default function Review() {
   const answers = useAppSelector((state) => state.answers);
@@ -17,11 +18,16 @@ export default function Review() {
         Next Game
         <FontAwesomeIcon icon={faChevronRight} />
       </Link>
-      
+
       <section className="flex items-center justify-center flex-col gap-20 my-20">
-        {answers.length > 0 ? answers.map((answer, index) => (
-          <KanaAnswer key={index} answer={answer} />
-        )): <p>No answers entered</p>}
+        {answers.length > 0 ? (
+          answers.map((answer, index) => (
+            // <KanaCard key={index} kana={answer.kana} withRomaji={true}/>
+            <KanaAnswer key={index} answer={answer} />
+          ))
+        ) : (
+          <p>No answers entered</p>
+        )}
       </section>
     </BaseLayout>
   );
@@ -30,14 +36,11 @@ export default function Review() {
 function KanaAnswer({ answer }: { answer: Answer }) {
   return (
     <article
-      className={`flex flex-col h-1/3 gap-4 items-center justify-center text-6xl ${
+      className={`flex flex-col w-full gap-4 items-center justify-center text-6xl ${
         answer.correct || "text-rose-400"
       }`}
     >
-      <div className="flex flex-col items-center">
-        <span>{answer.kana.kana}</span>
-        <span>{answer.kana.id}</span>
-      </div>
+      <KanaCard kana={answer.kana} withRomaji={true} />
       {answer.correct || (
         <span className="text-2xl text-rose-400">Skipped</span>
       )}
