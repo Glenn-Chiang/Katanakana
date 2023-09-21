@@ -15,11 +15,11 @@ export default function SettingsMenu({handleStart}: {handleStart: () => void}) {
   const { kanaType, timeLimit } = useSettingsSelector();
 
   const kanaTypeOptions = kanaTypes.map((kanaType, index) => (
-    <option key={index}>{kanaType}</option>
+    <option key={index} className="text-base">{kanaType}</option>
   ));
 
   const timeLimitOptions = timeLimits.map((timeLimit, index) => (
-    <option key={index}>{timeLimit}</option>
+    <option key={index} className="text-base">{timeLimit}</option>
   ));
 
   const dispatch = useAppDispatch();
@@ -43,7 +43,7 @@ export default function SettingsMenu({handleStart}: {handleStart: () => void}) {
         <FontAwesomeIcon icon={faGear} />
         Game Settings
       </h1>
-      <section className="w-5/6 flex flex-col gap-4 p-4 rounded">
+      <section className="w-5/6 md:w-1/2 flex flex-col gap-4 p-4 rounded">
         <div className="flex justify-between items-center">
           <span>Kana Type</span>
           <select

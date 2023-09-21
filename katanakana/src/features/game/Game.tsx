@@ -2,6 +2,7 @@ import {
   faArrowRotateRight,
   faClock,
   faGear,
+  faMagnifyingGlass,
   faRefresh,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -9,7 +10,7 @@ import React, { useEffect, useRef, useState, useCallback } from "react";
 import KanaCard from "../../components/KanaCard.tsx";
 import KatanaIcon from "../../components/KatanaIcon.tsx";
 import { useAppDispatch, useAppSelector } from "../../store.ts";
-import { Answer, addAnswer } from "./answersSlice.ts";
+import { Answer, addAnswer, resetAnswers } from "./answersSlice.ts";
 import { getKanas, getRandomKana } from "./helpers.ts";
 import { useSettingsSelector } from "./settingsSlice.ts";
 import { GameState } from "./types.ts";
@@ -50,7 +51,6 @@ export default function Game() {
     clearInterval(timerRef.current); // Clear timer
     setInputValue("");
     setGameState("post-game");
-    console.log(answers);
   }, [timeLeft, answers]);
 
   // Handle user input
@@ -95,9 +95,10 @@ export default function Game() {
     setScore(0);
     setKana(getKana());
     setGameState("pre-game");
+    setSettingsShown(false);
     setInputValue("");
     inputRef.current?.focus();
-    setSettingsShown(false);
+    dispatch(resetAnswers())
   };
 
   const showSettings = () => setSettingsShown(true);
@@ -115,25 +116,48 @@ export default function Game() {
         <Score score={score} />
       </div>
       <section className="flex flex-col gap-4 p-4 items-center justify-center h-1/2">
-        <KanaCard kana={kana} />
-        <input
-          ref={inputRef}
-          value={inputValue}
-          onKeyDown={handleKeyDown}
-          onChange={handleInputChange}
-          autoFocus
-          className="bg-black outline-none border-b-2 border-slate-400 text-4xl w-1/4 text-center"
-        />
+        {gameState === "post-game" ? (
+          <ResultCard score={score} />
+        ) : (
+          <>
+            <KanaCard kana={kana} />
+            <input
+              ref={inputRef}
+              value={inputValue}
+              onKeyDown={handleKeyDown}
+              onChange={handleInputChange}
+              autoFocus
+              className="bg-black outline-none border-b-2 border-slate-400 text-4xl w-1/4 text-center"
+            />
+          </>
+        )}
       </section>
-      <div className="p-4 flex justify-between text-slate-400">
+      <div className="p-4 flex justify-between">
         <SkipButton onClick={handleSkip} />
+        <RestartButton onClick={handleRestart} />
         <SettingsButton
           onClick={showSettings}
           disabled={gameState === "in-game"}
         />
-        <RestartButton onClick={handleRestart} />
       </div>
     </main>
+  );
+}
+
+function ResultCard({ score }: { score: number }) {
+  return (
+    <>
+      <section className="relative w-full flex flex-col justify-center items-center rounded-xl">
+        <div className="w-1/2 md:w-1/4 opacity-40">
+          <KatanaIcon />
+        </div>
+        <span className="text-8xl absolute text-white">{score}</span>
+      </section>
+      <button className="p-4 flex gap-2 items-center bg-slate-800 rounded-xl">
+        <FontAwesomeIcon icon={faMagnifyingGlass} />
+        Review
+      </button>
+    </>
   );
 }
 

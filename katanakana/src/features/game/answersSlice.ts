@@ -17,10 +17,13 @@ const answersSlice = createSlice({
     addAnswer: (state, action: PayloadAction<Answer>) => {
       state.push(action.payload);
     },
+    resetAnswers: (state) => {
+      state.length = 0
+    }
   },
 });
 
 // const answersSelector = useAppSelector(state => state.answers)
 
-export const { addAnswer } = answersSlice.actions;
+export const { addAnswer, resetAnswers } = answersSlice.actions;
 export default answersSlice.reducer;
