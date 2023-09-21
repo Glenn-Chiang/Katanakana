@@ -6,18 +6,17 @@ import {
   faRefresh,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useEffect, useRef, useState, useCallback } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import BaseLayout from "../../components/BaseLayout.tsx";
 import KanaCard from "../../components/KanaCard.tsx";
 import KatanaIcon from "../../components/KatanaIcon.tsx";
 import { useAppDispatch, useAppSelector } from "../../store.ts";
+import { GameState, Kana } from "../../types.ts";
+import Review from "../review/Review.tsx";
+import SettingsMenu from "../settings/SettingsMenu.tsx";
+import { useSettingsSelector } from "../settings/settingsSlice.ts";
 import { Answer, addAnswer, resetAnswers } from "./answersSlice.ts";
 import { getKanas, getRandomKana } from "./helpers.ts";
-import { useSettingsSelector } from "../settings/settingsSlice.ts";
-import { GameState } from "../../types.ts";
-import { Kana } from "../../types.ts";
-import BaseLayout from "../../components/BaseLayout.tsx";
-import SettingsMenu from "../settings/SettingsMenu.tsx";
-import { Link } from "react-router-dom";
 
 export default function Game() {
   // Get settings from redux store
@@ -92,25 +91,24 @@ export default function Game() {
     inputRef.current?.focus();
   };
 
-  const handleRestart = useCallback(() => {
+  const handleRestart = () => {
     setTimeLeft(timeLimit);
     setScore(0);
     setKana(getKana());
     setGameState("pre-game");
     setSettingsShown(false);
+    setReviewShown(false);
     setInputValue("");
     inputRef.current?.focus();
     dispatch(resetAnswers());
-  }, [dispatch, getKana, timeLimit]);
-
-  useEffect(() => {
-    handleRestart();
-  }, [handleRestart]);
+  };
 
   const inputRef: React.RefObject<HTMLInputElement> = useRef(null);
 
-  const showSettings = () => setSettingsShown(true);
   const [settingsShown, setSettingsShown] = useState(false);
+  const showSettings = () => setSettingsShown(true);
+  const [reviewShown, setReviewShown] = useState(false);
+  const showReview = () => setReviewShown(true);
 
   if (settingsShown)
     return (
@@ -118,6 +116,8 @@ export default function Game() {
         <SettingsMenu handleStart={handleRestart} />
       </BaseLayout>
     );
+
+  if (reviewShown) return <Review restart={handleRestart} />;
 
   return (
     <BaseLayout>
@@ -128,7 +128,7 @@ export default function Game() {
         </div>
         <section className="flex flex-col gap-4 p-4 items-center justify-center h-1/2">
           {gameState === "post-game" ? (
-            <ResultCard score={score} />
+            <ResultCard score={score} handleClick={showReview} />
           ) : (
             <>
               <KanaCard kana={kana} withRomaji={false} />
@@ -156,7 +156,12 @@ export default function Game() {
   );
 }
 
-function ResultCard({ score }: { score: number }) {
+interface ResultCardProps {
+  score: number;
+  handleClick: () => void;
+}
+
+function ResultCard({ score, handleClick }: ResultCardProps) {
   return (
     <>
       <section className="relative w-full flex flex-col justify-center items-center rounded-xl">
@@ -165,13 +170,13 @@ function ResultCard({ score }: { score: number }) {
         </div>
         <span className="text-8xl absolute text-white">{score}</span>
       </section>
-      <Link
-        to={"/dojo/review"}
+      <button
+        onClick={handleClick}
         className="p-4 flex gap-2 items-center bg-slate-800 rounded-xl"
       >
         <FontAwesomeIcon icon={faMagnifyingGlass} />
         Review
-      </Link>
+      </button>
     </>
   );
 }

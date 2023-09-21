@@ -3,28 +3,26 @@ import {
   faExclamationCircle
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useNavigate } from "react-router-dom";
 import BaseLayout from "../../components/BaseLayout";
 import KanaCard from "../../components/KanaCard";
+import KatanaIcon from "../../components/KatanaIcon";
 import { useAppSelector } from "../../store";
 import { Answer } from "../game/answersSlice";
 
-export default function Review() {
+interface ReviewProps {
+  restart: () => void
+}
+export default function Review({restart}: ReviewProps) {
   const answers = useAppSelector((state) => state.answers);
-
-  const navigate = useNavigate()
-  const handleClickNext = () => {
-    
-    navigate('/dojo')
-  }
 
   return (
     <BaseLayout>
       <button
-        onClick={handleClickNext}
+        onClick={restart}
         className="flex gap-2 items-center fixed right-0 p-4 z-10 bg-black top-0 w-full justify-end"
       >
-        Next Game
+        <div className="w-10 h-10"><KatanaIcon/></div>
+        Train again
         <FontAwesomeIcon icon={faChevronRight} />
       </button>
 
