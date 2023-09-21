@@ -1,19 +1,21 @@
-import { NavLink } from "react-router-dom";
-import KatanaIcon from "./components/KatanaIcon";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { faPlay } from "@fortawesome/free-solid-svg-icons";
 import { faScroll } from "@fortawesome/free-solid-svg-icons/faScroll";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { NavLink } from "react-router-dom";
+import KatanaIcon from "./components/KatanaIcon";
 
 export default function App() {
   return (
     <main className="h-screen flex flex-col items-center justify-center">
-      <header className=" text-5xl sm:text-8xl font-bold w-full flex flex-col items-center m-0 p-4 relative">
+      <header className=" text-5xl sm:text-8xl font-bold w-full flex flex-col items-center relative justify-center">
         <div className="h-4/5 w-4/5 sm:h-1/2 sm:w-1/3 flex justify-center items-center opacity-60">
           <KatanaIcon />
         </div>
-        <h1 className="z-10 uppercase absolute top-1/2 text-white ">
+        <h1 className="z-10 uppercase absolute text-white text-center flex flex-col items-center justify-center">
+          <em>かたなかな</em>
           <em>Katanakana</em>
+          <em>カタナカナ</em>
         </h1>
       </header>
       <MenuButtons />
