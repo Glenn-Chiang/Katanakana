@@ -142,7 +142,7 @@ export default function Game() {
             </>
           )}
         </section>
-        <div className="p-4 flex gap-4 flex-col items-center">
+        <div className="p-4 flex gap-4 flex-col items-center sm:flex-row justify-center">
           <SkipButton onClick={handleSkip} disabled={gameState !== "in-game"} />
           <RestartButton onClick={handleRestart} />
           <SettingsButton
