@@ -162,13 +162,13 @@ interface ResultCardProps {
 
 function ResultCard({ score, handleClick }: ResultCardProps) {
   return (
-    <>
-      <section className="relative w-full flex flex-col justify-center items-center rounded-xl">
+    <section className="flex flex-col items-center">
+      <div className="relative w-full flex flex-col justify-center items-center rounded-xl">
         <div className="w-1/2 md:w-1/4 opacity-40">
           <KatanaIcon />
         </div>
         <span className="text-8xl absolute text-white">{score}</span>
-      </section>
+      </div>
       <button
         onClick={handleClick}
         className="p-4 flex gap-2 items-center bg-slate-800 rounded-xl"
@@ -176,7 +176,7 @@ function ResultCard({ score, handleClick }: ResultCardProps) {
         <FontAwesomeIcon icon={faMagnifyingGlass} />
         Review
       </button>
-    </>
+    </section>
   );
 }
 
