@@ -72,10 +72,11 @@ export default function Game() {
   ): void => {
     if (!gameIsActive) return;
     if (event.key !== "Enter") return;
+    // Clear input field regardless of whether input if correct or not
+    setInputValue("");
     // If correct, move to next kana and add to score
     if (inputValue.toLowerCase() === kana.id) {
       setKana(getKana());
-      setInputValue("");
       setScore((score) => score + 1);
       const answer: Answer = { kana, correct: true };
       dispatch(addAnswer(answer));
